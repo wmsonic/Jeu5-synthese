@@ -109,3 +109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7338038e02c2f4ba9868aafaa946d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  biomeMaterielInexplorerMouiller: {fileID: 2100000, guid: 27a457fc2a90f7d4e9342a2d61812bbd, type: 2}
+  biomeItemShaderPrefab: {fileID: 1281548354357628665, guid: 10819bb92657d0a4886b2ef45c143996, type: 3}
+  item: {fileID: 0}
+  itemShader: {fileID: 0}

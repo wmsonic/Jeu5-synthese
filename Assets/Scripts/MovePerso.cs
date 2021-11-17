@@ -9,7 +9,7 @@ public class MovePerso : MonoBehaviour
     [SerializeField] private float vitesseRotation = 3.0f;
     [SerializeField] private float impulsionSaut = 30.0f;
     [SerializeField] private float gravite = 0.2f;
-    [SerializeField] private Transform mainCamera;
+    [SerializeField] private Camera mainCamera;
     [SerializeField] private GameObject champForce;
 
     private float vitesseSaut;
@@ -18,16 +18,20 @@ public class MovePerso : MonoBehaviour
     Animator animator;
     CharacterController controller;
 
+    private Vector3 champForceDefaultScale;
+
+    private float timeInJump = 0;
+    private bool _canAttack = false;
+    private GameObject _currentWeapon;
     
-    void Awake()
-    {
+    void Awake(){
         animator = GetComponent<Animator>();
         controller = GetComponent<CharacterController>();
+        champForceDefaultScale = champForce.GetComponent<Transform>().localScale;
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update(){
         //permet de faire rotate le personnage sur l'axe des Y à l'aide de vitesseRotation en le multipliant par l'axe d'input "Horizontal" qui retourne un chiffre entre -1 et 1
         transform.Rotate(0, Input.GetAxis("Horizontal")*vitesseRotation,0); 
 
@@ -58,9 +62,39 @@ public class MovePerso : MonoBehaviour
         //permet de bouger notre personnage à l’aide de la fonction Move du characterController et de directionsMouvement en lui donnant directionsMouvemnt multiplier par le Time.deltaTime pour que le mouvement se déroule en temps réel
         controller.Move(directionsMouvement * Time.deltaTime);
 
-        // mainCamera.position = mainCamera.position + (mainCamera.forward * Mathf.Clamp(vitesse * Time.deltaTime, 10, 30));
+        //permet de modifier progressivement le FOV de la caméra pour qu'il corresponde à la vitesse de notre personnage à l'aide de la fonction Lerp en lui donnant les FOV minimum et maximum que l'on veut et la valeur de notre input
+        mainCamera.fieldOfView = Mathf.Lerp(40,100, Input.GetAxis("Vertical"));
         
-        // if(directionsMouvement.z !> 0 || directionsMouvement.y > 0) champForce.GetComponent<Transform>().localScale = champForce.GetComponent<Transform>().localScale * vitesse;
+        if(controller.isGrounded){
+            champForce.GetComponent<Transform>().localScale = champForceDefaultScale * Mathf.Lerp(0,1, Input.GetAxis("Vertical"));
+            timeInJump = 0;
+        } else {
+            float duration= .5f;
+            champForce.GetComponent<Transform>().localScale = champForceDefaultScale * Mathf.Lerp(1,0, timeInJump / duration);
+            if(timeInJump<1){
+                timeInJump += Time.deltaTime;
+            }
+            // Debug.Log(timeInJump);
+        }
 
+        if(Input.GetButton("Fire1") && controller.isGrounded && _canAttack) StartCoroutine(Attack());
+    }
+
+    public void AllowAttacking(){
+        _canAttack = true;
+    }
+    public void SetWeapon(GameObject weapon){
+        _currentWeapon = weapon;
+    }
+
+    IEnumerator Attack(){
+        _currentWeapon.GetComponentInChildren<Collider>().enabled = true;
+        _canAttack = false;
+        animator.SetTrigger("attaque");
+        //play and stop particle emiter quand attaque. Maybe can do par l'animator (genre on start et on end)?
+        yield return new WaitForSeconds(1.5f);
+        _canAttack = true;
+        _currentWeapon.GetComponentInChildren<Collider>().enabled = false;
+        yield return null;
     }
 }

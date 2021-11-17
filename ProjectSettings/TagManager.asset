@@ -3,7 +3,15 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - ChampForce_player
+  - niveau_eau
+  - item
+  - epee
+  - hache
+  - weapon
+  - anyCanDestroy
+  - swordCanDestroy
   layers:
   - Default
   - TransparentFX

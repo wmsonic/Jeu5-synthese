@@ -3,7 +3,11 @@ guid: 6d7338038e02c2f4ba9868aafaa946d3
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - biomeMaterielInexplorerMouiller: {instanceID: 0}
+  - biomeItemShaderPrefab: {instanceID: 0}
+  - item: {instanceID: 0}
+  - itemShader: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
