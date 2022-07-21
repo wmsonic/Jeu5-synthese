@@ -12,12 +12,13 @@ GameObject:
   - component: {fileID: 7769292168464764718}
   - component: {fileID: 5491828969185606628}
   - component: {fileID: 3179926536773682986}
+  - component: {fileID: -1364765565242345270}
   m_Layer: 0
   m_Name: I2_2
-  m_TagString: Untagged
+  m_TagString: Structure
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &6664704597042266251
 Transform:
@@ -96,3 +97,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.0831629, y: 0.010869978, z: 0.068607114}
   m_Center: {x: -0.0000172183, y: -0.000020342677, z: -0.02771174}
+--- !u!208 &-1364765565242345270
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6284237996295084593}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.042000003, y: 0.0050000004, z: 0.034}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: -0.028}
+  m_TimeToStationary: 0.5

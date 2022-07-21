@@ -33,12 +33,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - Alpha: 0.7
     - DensiterReflets: 4.28
     - IntensiterReflets: 6.52
     - IntensiterVagues: 8.76
     - VitesseReflets: 0.3
     - VitesseVagues: 0.02
     m_Colors:
-    - CouleurEau: {r: 0.24679595, g: 0.57038766, b: 0.8867924, a: 0}
-    - CouleurReflets: {r: 0.4526846, g: 3.297361, b: 3.325491, a: 0}
+    - CouleurEau: {r: 0.24679595, g: 0.57038766, b: 0.8867924, a: 1}
+    - CouleurReflets: {r: 0.28838864, g: 2.1074555, b: 2.1185474, a: 0}
   m_BuildTextureStacks: []

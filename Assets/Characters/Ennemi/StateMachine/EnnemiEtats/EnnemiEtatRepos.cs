@@ -8,8 +8,8 @@ public class EnnemiEtatRepos : EnnemiEtatsBase
     }
 
     private IEnumerator nav(EnnemiEtatsManager ennemi){
-        float patience = Random.Range(4f,15f);
+        float patience = Random.Range(1f,6f);
         yield return new WaitForSeconds(patience);
-        ennemi.ChangerEtat(ennemi.chasse);
+        ennemi.ChangerEtat(ennemi.patrol);
     }
 }

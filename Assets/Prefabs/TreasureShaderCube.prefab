@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5256439495342631320}
   - component: {fileID: 8253542255144767893}
   - component: {fileID: 5737805529840287543}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: TreasureShaderCube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

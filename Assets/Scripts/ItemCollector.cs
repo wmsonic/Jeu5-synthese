@@ -5,7 +5,7 @@ using UnityEngine;
 public class ItemCollector : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other) {
-        if(other.CompareTag("item")){
+        if(other.CompareTag("item") || other.CompareTag("collectible")){
             other.GetComponent<Item>().StartFollowing();
         }
     }

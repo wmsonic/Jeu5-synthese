@@ -18,17 +18,16 @@ public class DropItem : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other) {
-        if(gameObject.CompareTag("anyCanDestroy")){
-            Debug.Log("you can destroy me with any weapon");
+        if(gameObject.CompareTag("anyCanDestroy") || gameObject.CompareTag("cactus")){
+            // Debug.Log("you can destroy me with any weapon");
             if(other.CompareTag("hache") || other.CompareTag("epee")){
-                // get parent component pour changer de biome ?`
-                // biome.ChangerEtat(biome._briser);
+                other.GetComponent<AudioSource>().Play();
                 _parentCube.ChangerEtat(_parentCube._briser);
             }
         }else if(gameObject.CompareTag("swordCanDestroy")){
-            Debug.Log("you can destroy me with a sword");
+            // Debug.Log("you can destroy me with a sword");
             if(other.CompareTag("epee")){
-                // biome.ChangerEtat(biome._briser);
+                other.GetComponent<AudioSource>().Play();
                 _parentCube.ChangerEtat(_parentCube._briser);
             }
         }

@@ -8,7 +8,10 @@ public class Item : MonoBehaviour
     enum _dropType{
         none,
         bamboo,
-        branche
+        branche,
+        feuille,
+        pieces,
+        vases
     };
 
     [SerializeField] private _dropType _typeDropDown =  _dropType.none;
@@ -20,7 +23,9 @@ public class Item : MonoBehaviour
     private bool _isFollowing = false;
     private bool _canAnimateUp = true;
 
-
+    private void Awake() {
+        itemType = _typeDropDown.ToString();
+    }
 
     void Start()
     {
@@ -29,22 +34,24 @@ public class Item : MonoBehaviour
         if(_typeDropDown == _dropType.none){
             Debug.Log("Please set drop type of prefab : " + this.name);
         }
-        itemType = _typeDropDown.ToString();
         _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        // if(_typeDropDown == _dropType.pieces || _typeDropDown == _dropType.vases){
+        //     GameObject.FindGameObjectWithTag("inventaire").GetComponent<Inventaire>().AddToTotal(itemType);
+        // }
     }
 
     private void Update() {
         if(_isFollowing){
-            transform.position = Vector3.SmoothDamp(transform.position, _player.position, ref _velocity, Time.deltaTime * 6.5f);
+            transform.position = Vector3.SmoothDamp(transform.position, _player.position, ref _velocity, Time.deltaTime * 2f);
         }
     }
 
     IEnumerator AnimateDrop(){
         Transform itemTransform = this.transform;
         Vector3 originalScale = itemTransform.localScale; // Récupère le scale original du cube
-        Vector3 targetScale = itemTransform.localScale * Random.Range(.2f,1.5f); // Définie un scale aléatoire entre deux valeur cube, qui sera la grosseur vers laquelle on veut transformer le cube
+        Vector3 targetScale = itemTransform.localScale * Random.Range(.2f,1.5f); // Définie un scale aléatoire entre deux valeur, qui sera la grosseur vers laquelle on veut transformer l'item
         Vector3 originalPos = itemTransform.position; // Récupère la position original du cube
-        Vector3 targetPos = new Vector3(itemTransform.position.x, itemTransform.position.y + Random.Range(3f,3.7f), itemTransform.position.z); // Définie une position qui sera la position vers laquelle on veut déplacer le cube (Dans se cas : hauteur aléatoire entre deux valeur cube)
+        Vector3 targetPos = new Vector3(itemTransform.position.x, itemTransform.position.y + Random.Range(3f,3.7f), itemTransform.position.z); // Définie une position qui sera la position vers laquelle on veut déplacer l'item (Dans se cas : hauteur aléatoire entre deux valeur)
         yield return AnimateTransform(itemTransform,originalScale, targetScale, originalPos, targetPos, 1f);
         yield return AnimateTransform(itemTransform,targetScale, originalScale, targetPos, originalPos, .5f);
         yield return null;
@@ -72,13 +79,4 @@ public class Item : MonoBehaviour
         }
         // Debug.Log("is following player");
     }
-
-    // public IEnumerator MoveToPlayer(){
-    //     while(_isFollowing){
-    //         Debug.Log("FOLLOWING!!");
-    //         // Debug.Log("Following!!");
-    //         transform.position = Vector3.SmoothDamp(transform.position, _player.position, ref _velocity, Time.deltaTime * Random.Range(3,6));
-    //     }
-    //     yield return null;
-    // }
 }

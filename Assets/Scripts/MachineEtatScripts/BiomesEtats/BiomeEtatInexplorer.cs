@@ -7,6 +7,11 @@ public class BiomeEtatInexplorer : BiomesEtatsBase
     ParticleSystem _particleSystemSubEmitter;
     bool _canAnimate = true;
     public override void InitEtat(BiomesEtatsManager biome){
+        if(biome.item != null){
+            if(biome.item.CompareTag("Structure")){
+                biome.item.gameObject.SetActive(true);
+            }
+        }
         // Debug.Log("hello je commence ma vie, je suis inexplorer!");
         // biome.ChangerEtat(biome._explorer);
     }

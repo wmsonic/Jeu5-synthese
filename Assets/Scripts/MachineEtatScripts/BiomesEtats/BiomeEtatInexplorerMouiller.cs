@@ -11,7 +11,7 @@ public class BiomeEtatInexplorerMouiller : BiomesEtatsBase
         biome.GetComponent<Renderer>().material = biome.biomeMaterielInexplorerMouiller;
 
         //fait jouer shader d'indication d'item si en contien un
-        if(biome.item != null){
+        if(biome.itemShader != null && biome.item.GetComponent<Item>()!=null && biome.item.CompareTag("collectible")){
             biome.itemShader.SetActive(true);
         }
         

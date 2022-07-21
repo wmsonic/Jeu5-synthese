@@ -20,23 +20,38 @@ public class GenerateurIle : MonoBehaviour
     [SerializeField] private GameObject _ennemi;
     [SerializeField] [Range(0,20)]private int _amountOfEnnemis = 20;
     [SerializeField] private GameObject perso;
+    [SerializeField] private Inventaire inventaire;
+    [SerializeField] private GameObject waterPlane;
+    [SerializeField] private GameObject oiseaux;
     
 
     private List<List<Material>> _biomesMats = new List<List<Material>>();
     private List<List<GameObject>> _biomesItems = new List<List<GameObject>>();
-
-    // private void Awake() {
-
-    // }
+    private PowerUpSpawner _powerUpSpawner;
+    private bool _bouerSpawnSet = false;
+    private bool _masqueSpawnSet = false;
+    private List<GameObject> _listeEnnemis = new List<GameObject>();
+    private List<Transform> _listeCatcus = new List<Transform>();
+    // private List<GameObject> _listeVases = new List<GameObject>();
+    // private List<GameObject> _listePieces = new List<GameObject>();
+    private int _amountVases = 0;
+    private int _amountPieces = 0;
 
     void Start(){
+        Time.timeScale = 1f;
         // GenererListeMateriauxBiomes();
+        _powerUpSpawner = GetComponent<PowerUpSpawner>();
         GenererListeRessourcesBiomes<Material>("materials", "B", _biomesMats);
         GenererListeRessourcesBiomes<GameObject>("objects", "I", _biomesItems);
         creerMap();
         perso.SetActive(false);
+        waterPlane.SetActive(false);
+        oiseaux.SetActive(false);
         GetComponent<NavMeshSurface>().BuildNavMesh();
         perso.SetActive(true);
+        waterPlane.SetActive(true);
+        oiseaux.SetActive(true);
+        waterPlane.GetComponent<WaterRiser>().riseWater(0f);
     }
 
 
@@ -223,7 +238,6 @@ public class GenerateurIle : MonoBehaviour
         int larg = map.GetLength(0);
         int prof = map.GetLength(1);
         int QuantiterBiome = _biomesMats.Count - 1;
-        
         for(int x = 0; x<larg; x++){
             for(int z = 0; z<prof; z++){
                 float y = map[x,z];
@@ -231,10 +245,13 @@ public class GenerateurIle : MonoBehaviour
                     GameObject unCube = Instantiate(_cube, new Vector3(x-(larg/2),y*_coefAltitude,z-(prof/2)),Quaternion.identity);
 
                     //spawn ennemis aléatoirement
-                    if(Random.Range(0,100) > 95 && _amountOfEnnemis>0){
+                    if(Random.Range(0,100) > 95 && _amountOfEnnemis>0 && unCube.transform.position.y < 5f){
                         GameObject unAgent = Instantiate((GameObject)Resources.Load("ennemi"),unCube.transform.position, Quaternion.identity);
                         unAgent.GetComponent<EnnemiEtatsManager>().perso = perso;
                         unAgent.GetComponent<EnnemiEtatsManager>().home = unCube;
+                        // GameObject patrolPoints = Instantiate((GameObject)Resources.Load("EnnemiPatrolPoints"),unCube.transform.position, Quaternion.identity);
+                        // unAgent.GetComponent<EnnemiEtatsManager>().patrolPoints = patrolPoints.GetComponent<PatrolPoints>().GetPatrolPoints();
+                        _listeEnnemis.Add(unAgent);
                         _amountOfEnnemis--;
                     }
 
@@ -252,18 +269,62 @@ public class GenerateurIle : MonoBehaviour
                     unCube.GetComponent<BiomesEtatsManager>().biomeMaterielExplorerMouiller = _biomesMats[quelBiome][quelVariantExplorerMouiller];
                     unCube.GetComponent<BiomesEtatsManager>().biomeMaterielBriserMouiller = _biomesMats[quelBiome][quelVariantBriserMouiller];
 
+                    if(Random.Range(0,100) > 50 && unCube.transform.position.y < 4f && !_bouerSpawnSet && NearCenter(larg,prof,x,z)){
+                        _powerUpSpawner.SetSpawnPosition("bouer",unCube.transform.position);
+                        _bouerSpawnSet = true;
+                        Debug.Log("bouer spawn set");
+                    }
+
+                    if(Random.Range(0,100) > 50 && unCube.transform.position.y < 3f && !_masqueSpawnSet && NearCenter(larg,prof,x,z)){
+                        _powerUpSpawner.SetSpawnPosition("masque",unCube.transform.position);
+                        _masqueSpawnSet = true;
+                        Debug.Log("masque spawn set");
+                    }
+
                     // ajoute un item possible en enfant aléatoirement
-                    if(Random.Range(0,100) > 95 && _biomesItems.Count-1>=quelBiome){
-                        int quelItem = Random.Range(0, (_biomesItems[quelBiome].Count -1));
+                    if(Random.Range(0,100) > 95 && _biomesItems.Count-1 >= quelBiome){
+                        int quelItem = Random.Range(0, (_biomesItems[quelBiome].Count));
                         //modifier +.4f pour la hauteur set dans le prefab
                         GameObject item = Instantiate(_biomesItems[quelBiome][quelItem], new Vector3(unCube.transform.position.x, unCube.transform.position.y + _biomesItems[quelBiome][quelItem].transform.position.y,unCube.transform.position.z), _biomesItems[quelBiome][quelItem].transform.rotation, unCube.transform);
                         // Vector3 itemLocation = new Vector3(unCube.transform.position.x, unCube.transform.position.y + .4f,unCube.transform.position.z);
+                        if(item.CompareTag("cactus")) {
+                            _listeCatcus.Add(item.transform);
+                        }else if(item.CompareTag("collectible")){
+                            // Debug.Log(item.GetComponent<Item>().itemType);
+                            if(item.GetComponent<Item>().itemType == "vases"){
+                                // _listeVases.Add(item);
+                                _amountVases++;
+                            }else if(item.GetComponent<Item>().itemType == "pieces"){
+                                // _listePieces.Add(item);
+                                _amountPieces++;
+                            }
+                        }
                         item.name = "item";
                         item.SetActive(false);
                     }
                 }
             }
         }
+
+        foreach (GameObject ennemi in _listeEnnemis)
+        {
+            List<Vector3> patrolPoints = new List<Vector3>();
+            for (int i = 0; i <= 4; i++){
+                patrolPoints.Add(_listeCatcus[Random.Range(0,_listeCatcus.Count)].position);
+            }
+            ennemi.GetComponent<EnnemiEtatsManager>().patrolPoints = patrolPoints;
+        }
+
+        inventaire.SetTotalPieces(_amountPieces);
+        inventaire.SetTotalVases(_amountVases);
+    }
+
+    private bool NearCenter(int maxX,int maxZ,int currentX, int currentZ){
+        float divider = 4f; // doit rester plus gros que 2 sinon tout sera la fonction retournera toujours false;
+        if(currentX > maxX / divider && currentX < maxX - maxX / divider && currentZ > maxZ / divider && currentZ < maxZ - maxZ / divider){
+            return true;
+        }
+        return false;
     }
 
 }

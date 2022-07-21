@@ -6,7 +6,9 @@ public class BiomeEtatExplorer : BiomesEtatsBase
         // Debug.Log("hello je continue ma vie, je suis explorer!");
         // biome.GetComponent<Renderer>().material = biome.biomeMateriel;
         if(biome.item != null){
-            biome.item.gameObject.SetActive(true);
+            if(biome.item.GetComponent<Item>() == null || biome.item.CompareTag("item")){
+                biome.item.gameObject.SetActive(true);
+            }
         }
         // Debug.Log(item);
     }

@@ -25,13 +25,13 @@ public class BiomesEtatsManager : MonoBehaviour
     void Start()
     {
         // GetComponent<Renderer>().material = biomeMateriel;
-        ChangerEtat(_inexplorer);
-
         item = transform.Find("item");
+        ChangerEtat(_inexplorer);
         if(item != null){
             itemShader = Instantiate(biomeItemShaderPrefab, this.transform.position, Quaternion.identity, transform);
             itemShader.name = "itemShader";
             itemShader.SetActive(false);
+            
         }
     }
 

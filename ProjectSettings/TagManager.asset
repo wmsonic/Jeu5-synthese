@@ -12,11 +12,22 @@ TagManager:
   - weapon
   - anyCanDestroy
   - swordCanDestroy
+  - EnnemiBait
+  - palme
+  - masque
+  - tuba
+  - water
+  - bouee
+  - collectible
+  - inventaire
+  - ennemi
+  - Structure
+  - cactus
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - TreasureShader
   - Water
   - UI
   - 
